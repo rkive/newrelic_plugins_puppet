@@ -82,6 +82,7 @@ class newrelic_plugins::mysql (
     $mysql_user = '',
     $mysql_passwd = '',
     $java_options = $newrelic_plugins::params::mysql_java_options,
+    $verify_java = 'true',
     $newrelic_properties_template = 'newrelic_plugins/mysql/newrelic.properties.erb',
     $mysql_instance_template = 'newrelic_plugins/mysql/mysql.instance.json.erb',
 ) inherits params {
@@ -89,7 +90,9 @@ class newrelic_plugins::mysql (
   include stdlib
 
   # verify java is installed
-  newrelic_plugins::resource::verify_java { 'MySQL Plugin': }
+  if str2bool($verify_java) {
+    newrelic_plugins::resource::verify_java { 'MySQL Plugin': }
+  }
 
   # verify attributes
   validate_absolute_path($install_path)
